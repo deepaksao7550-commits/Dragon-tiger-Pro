@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dragon Tiger - User App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* =========================================
+   USER APP CSS (PREMIUM DESIGN)
+========================================= */
+body { margin: 0; font-family: 'Arial', sans-serif; color: white; text-align: center; overflow-x: hidden; background: #0f172a; }
+.bg-animated { background: linear-gradient(-45deg, #4a0000, #1a0000, #000, #000c1a, #001a4d); background-size: 400% 400%; animation: bgShift 12s ease infinite; position: fixed; width:100%; height:100%; top:0; left:0; z-index:-2;}
+@keyframes bgShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.bg-design { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: flex; justify-content: space-between; align-items: center; opacity: 0.15; pointer-events: none; overflow: hidden; }
+.bg-dragon { font-size: 55vh; transform: scaleX(-1) translateX(-15%); filter: drop-shadow(0 0 30px #ff0000); animation: floatD 5s infinite ease-in-out; }
+.bg-tiger { font-size: 55vh; transform: translateX(15%); filter: drop-shadow(0 0 30px #0055ff); animation: floatT 5s infinite ease-in-out reverse; }
+@keyframes floatD { 0%, 100% { transform: scaleX(-1) translateX(-15%) translateY(0); } 50% { transform: scaleX(-1) translateX(-15%) translateY(-25px); } }
+@keyframes floatT { 0%, 100% { transform: translateX(15%) translateY(0); } 50% { transform: translateX(15%) translateY(-25px); } }
+
+/* LOGIN & REGISTER PAGE CSS */
+.auth-container { display: none; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1000; position: fixed; width: 100%; top: 0; backdrop-filter: blur(5px); }
+.auth-posters-wrapper { display: flex; align-items: center; justify-content: center; gap: 40px; width: 100%; max-width: 900px; z-index: 10; padding: 15px; box-sizing: border-box;}
+.auth-box-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 350px; z-index: 15;}
+.auth-poster { width: 160px; height: 240px; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 3px solid gold; animation: floatPoster 3.5s ease-in-out infinite; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: transform 0.3s; }
+.p-dragon { background: radial-gradient(circle at top, #d31027, #500000); box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); border-color: #ff3b3b; }
+.p-tiger { background: radial-gradient(circle at top, #0052d4, #001a50); box-shadow: 0 0 30px rgba(0, 85, 255, 0.5); border-color: #3b7bff; animation-delay: 1.7s; }
+.p-icon { font-size: 75px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.7)); margin-bottom: 5px; }
+.p-text { color: gold; font-weight: bold; font-size: 20px; letter-spacing: 2px; text-shadow: 0 5px 10px black; }
+@keyframes floatPoster { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+@media (max-width: 768px) {
+    .auth-posters-wrapper { flex-wrap: wrap; gap: 15px; }
+    .p-dragon, .p-tiger { order: -1; width: 45%; height: 130px; border-width: 2px; }
+    .auth-box-wrapper { order: 2; width: 100%; }
+    .p-icon { font-size: 50px; }
+    .p-text { font-size: 15px; }
+}
+
+.auth-box { background: rgba(17, 17, 17, 0.95); padding: 25px; border-radius: 15px; width: 100%; box-sizing: border-box; border: 2px solid gold; box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+.auth-box h2 { color: gold; margin-top: 0; font-size: 24px; text-shadow: 0 0 10px gold; margin-bottom: 15px;}
+.auth-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
+.auth-btn { width: 100%; padding: 12px; background: linear-gradient(45deg, #ff9900, #ff5500); border: none; color: white; font-weight: bold; font-size: 18px; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(255, 85, 0, 0.5); transition: 0.2s;}
+.auth-btn:active { transform: scale(0.95); }
+
+.auth-tabs { display: flex; width: 100%; margin-bottom: 15px; border-radius: 8px; overflow: hidden; border: 1px solid #444;}
+.auth-tab-btn { flex: 1; padding: 10px; background: #222; border: none; color: #aaa; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.auth-tab-btn.active { background: gold; color: black; }
+
+#game-container { display: none; padding-bottom: 20px; } 
+.header { background: rgba(0, 0, 0, 0.7); padding: 15px; border-bottom: 2px solid gold; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+.action-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+.deposit-btn { background: linear-gradient(45deg, #00b09b, #96c93d); border: none; padding: 8px 15px; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; }
+.withdraw-btn { background: linear-gradient(45deg, #ff416c, #ff4b2b); border: none; padding: 8px 15px; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; }
+.logout-btn { background: #444; border: 1px solid #666; padding: 5px 10px; color: white; border-radius: 5px; cursor: pointer; position: absolute; right: 10px; top: 10px; }
+
+.volume-wrapper { position: absolute; top: 45px; right: 10px; z-index: 10; display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; }
+.vol-btn { width: 35px; height: 35px; background: rgba(0,0,0,0.8); border: 2px solid gold; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; cursor: pointer; box-shadow: 0 0 10px gold; backdrop-filter: blur(5px); transition: 0.2s; }
+.vol-btn:active { transform: scale(0.9); }
+.vol-slider-container { display: none; background: rgba(0,0,0,0.8); padding: 5px 10px; border-radius: 15px; border: 1px solid gold; box-shadow: 0 0 10px gold; backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
+.vol-slider-container input { width: 70px; accent-color: gold; cursor: pointer; margin: 0; }
+@keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+#timer { font-size: 35px; color: gold; margin: 15px; font-weight: bold; text-shadow: 0 0 15px gold, 0 0 5px red; }
+.table { display: flex; justify-content: space-around; padding: 0 10px; }
+.box { width: 42%; padding: 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; }
+.dragon { background: radial-gradient(circle at top, #b20a2c, #500000); border: 2px solid #ff3b3b; }
+.tiger { background: radial-gradient(circle at top, #003b8a, #001a50); border: 2px solid #3b7bff; }
+.card { width: 90px; height: 130px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 45px; font-weight: bold; transition: transform 0.3s ease; }
+.card-back { background: repeating-linear-gradient(45deg, #111, #111 10px, #333 10px, #333 20px); border: 3px solid gold; color: transparent !important; }
+
+.bet { display: flex; justify-content: center; gap: 15px; margin-top: 20px; padding: 0 15px; }
+.bet button { flex: 1; padding: 10px 5px; border-radius: 15px; cursor: pointer; color: white; border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s ease; }
+.dragonBtn { background: linear-gradient(135deg, #d31027, #ea384d); }
+.tieBtn { background: linear-gradient(135deg, #11998e, #38ef7d); }
+.tigerBtn { background: linear-gradient(135deg, #0052d4, #4364f7); }
+.active-bet { border-color: gold !important; transform: scale(1.08); box-shadow: 0 10px 20px rgba(255, 215, 0, 0.5); }
+.btn-icon { font-size: 40px; margin-bottom: 5px; } .btn-text { font-size: 16px; font-weight: bold; } .bet-amt { font-size: 16px; color: gold; font-weight: bold; margin-top: 5px; min-height: 18px; text-shadow: 0 2px 4px black; }
+
+.chips { margin-top: 20px; }
+.chips button { width: 60px; height: 60px; margin: 5px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; color: white; border: 3px dashed rgba(255,255,255,0.7); transition: all 0.2s; }
+.c-10 { background: #0072ff; } .c-50 { background: #11998e; } .c-100 { background: #e53935; } .c-500 { background: #c02425; }
+.active-chip { border-color: gold !important; transform: scale(1.15); box-shadow: 0 0 20px gold; border-style: solid; }
+
+.history-wrapper { margin: 20px 10px; background: rgba(17, 17, 17, 0.8); padding: 10px; border-radius: 12px; border: 1px solid #444; }
+.history-container { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; }
+.history-ball { width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 15px; color: white; flex-shrink: 0; border: 2px solid white; }
+.hist-d { background: #ff5e5e; } .hist-t { background: #3b7bff; } .hist-tie { background: #38ef7d; font-size: 12px; }
+
+.modal { display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+.modal-content { background: #111; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; border: 2px solid gold; position: relative; }
+</style>
+</head>
+<body>
+
+<div class="bg-animated" id="main-bg"></div>
+<div class="bg-design" id="main-watermark">
+    <div class="bg-dragon">🐉</div>
+    <div class="bg-tiger">🐯</div>
+</div>
+
+<!-- USER LOGIN & REGISTER UI -->
+<div id="auth-container" class="auth-container">
+    <div class="auth-posters-wrapper">
+        <div class="auth-poster p-dragon"><div class="p-icon">🐉</div><div class="p-text">DRAGON</div></div>
+        
+        <div class="auth-box-wrapper">
+            <div class="auth-box">
+                <h2>PLAY & WIN</h2>
+                <div class="auth-tabs">
+                    <button id="tab-login" class="auth-tab-btn active" onclick="switchTab('login')">LOGIN</button>
+                    <button id="tab-register" class="auth-tab-btn" onclick="switchTab('register')">REGISTER</button>
+                </div>
+                <!-- LOGIN FORM -->
+                <div id="form-login">
+                    <input type="tel" id="l-mobile" class="auth-input" placeholder="Registered Mobile No." maxlength="10">
+                    <input type="password" id="l-pin" class="auth-input" placeholder="Enter 4-Digit PIN" maxlength="4">
+                    <button class="auth-btn" onclick="loginUser()">LOGIN ACCOUNT</button>
+                </div>
+                <!-- REGISTER FORM -->
+                <div id="form-register" style="display: none;">
+                    <input type="text" id="r-name" class="auth-input" placeholder="Enter Full Name">
+                    <input type="tel" id="r-mobile" class="auth-input" placeholder="10-Digit Mobile No." maxlength="10">
+                    <input type="password" id="r-pin" class="auth-input" placeholder="Create 4-Digit PIN" maxlength="4">
+                    <button class="auth-btn" onclick="registerUser()">CREATE ACCOUNT</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-poster p-tiger"><div class="p-icon">🐯</div><div class="p-text">TIGER</div></div>
+    </div>
+</div>
+
+<!-- USER GAME INTERFACE -->
+<div id="game-container">
+    <div class="header">
+        <button class="logout-btn" onclick="userLogout()">Logout</button>
+        <div class="volume-wrapper">
+            <div class="vol-btn" id="vol-btn" onclick="toggleVolumeSlider()">🔊</div>
+            <div class="vol-slider-container" id="vol-slider-container">
+                <input type="range" id="vol-slider" min="0" max="100" value="40" oninput="setVolume(this.value)">
+            </div>
+        </div>
+        <div style="font-size:14px; color:#ddd;">Welcome, <span id="userNameDisplay" style="color:gold; font-weight:bold;">Player</span><br><span id="userIdDisplay" style="font-size:12px; color:#aaa;"></span></div>
+        <div style="font-size:28px; color:#00e676; font-weight:bold; margin-top:5px;">₹<span id="balance">0</span></div>
+        
+        <div class="action-buttons">
+            <button class="deposit-btn" onclick="document.getElementById('depositModal').style.display='flex'">+ DEPOSIT</button>
+            <button class="withdraw-btn" onclick="document.getElementById('withdrawModal').style.display='flex'">- WITHDRAW</button>
+        </div>
+        <div id="lastWin" style="margin-top:10px; font-size:16px;">Waiting to bet...</div>
+    </div>
+
+    <div id="timer">15</div>
+
+    <div class="table">
+        <div class="box dragon">
+            <div class="card card-back" id="dragonCard"></div><h3>DRAGON</h3>
+        </div>
+        <div class="box tiger">
+            <div class="card card-back" id="tigerCard"></div><h3>TIGER</h3>
+        </div>
+    </div>
+
+    <div class="bet">
+        <button id="btn-dragon" class="dragonBtn" onclick="placeBet('dragon')">
+            <div class="btn-icon">🐉</div><div class="btn-text">DRAGON</div><div class="bet-amt" id="amt-dragon"></div>
+        </button>
+        <button id="btn-tie" class="tieBtn" onclick="placeBet('tie')">
+            <div class="btn-icon">⚔️</div><div class="btn-text">TIE (8X)</div><div class="bet-amt" id="amt-tie"></div>
+        </button>
+        <button id="btn-tiger" class="tigerBtn" onclick="placeBet('tiger')">
+            <div class="btn-icon">🐯</div><div class="btn-text">TIGER</div><div class="bet-amt" id="amt-tiger"></div>
+        </button>
+    </div>
+
+    <div class="chips">
+        <button id="chip-10" class="c-10 active-chip" onclick="selectChip(10)">10</button>
+        <button id="chip-50" class="c-50" onclick="selectChip(50)">50</button>
+        <button id="chip-100" class="c-100" onclick="selectChip(100)">100</button>
+        <button id="chip-500" class="c-500" onclick="selectChip(500)">500</button>
+    </div>
+
+    <div class="history-wrapper">
+        <div style="font-size:13px; color:gold; text-align:left; font-weight:bold; margin-bottom:5px;">LIVE RESULTS</div>
+        <div id="history-container" class="history-container"></div>
+    </div>
+</div>
+
+<!-- MODALS -->
+<div id="depositModal" class="modal">
+    <div class="modal-content">
+        <span onclick="this.parentElement.parentElement.style.display='none'" style="position:absolute; right:15px; top:10px; font-size:24px; cursor:pointer;">&times;</span>
+        <h2 style="color:gold; margin-top:0;">Deposit Amount</h2>
+        <div style="background:#222; border:1px dashed gold; padding:10px; color:gold; margin-bottom:10px;">Pay to UPI: <span id="displayUpi">admin@upi</span></div>
+        <input type="number" id="depAmount" class="auth-input" placeholder="Amount">
+        <input type="text" id="depUTR" class="auth-input" placeholder="12 Digit UTR No.">
+        <button class="auth-btn" style="background: linear-gradient(45deg, #00b09b, #96c93d);" onclick="submitDeposit()">Submit Request</button>
+    </div>
+</div>
+<div id="withdrawModal" class="modal">
+    <div class="modal-content">
+        <span onclick="this.parentElement.parentElement.style.display='none'" style="position:absolute; right:15px; top:10px; font-size:24px; cursor:pointer;">&times;</span>
+        <h2 style="color:#ff4b2b; margin-top:0;">Withdraw</h2>
+        <input type="number" id="withAmount" class="auth-input" placeholder="Amount">
+        <input type="text" id="withUPI" class="auth-input" placeholder="Bank Account / UPI ID">
+        <button class="auth-btn" style="background: linear-gradient(45deg, #ff416c, #ff4b2b);" onclick="submitWithdraw()">Withdraw</button>
+    </div>
+</div>
+
+<script>
+// DB Initializer
+function getDB(key) { try { return JSON.parse(localStorage.getItem(key)); } catch(e) { return null; } }
+function setDB(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+if(!getDB('adminPass')) setDB('adminPass', '2580'); 
+if(!getDB('users')) setDB('users', {});
+if(!getDB('transactions')) setDB('transactions', []);
+if(!getDB('settings')) setDB('settings', { upi: 'admin@ybl', minDep: 100, minWith: 500, gameControl: 'fair', targetProfit: 20 });
+if(!getDB('adminStats')) setDB('adminStats', { totalBets: 0, totalPayouts: 0 });
+if(!getDB('gameHistory')) setDB('gameHistory', []);
+
+// Audio Logic
+let audioCtx, masterGain; let isMusicPlaying = false;
+function initAudio() { 
+    try { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); masterGain = audioCtx.createGain(); masterGain.gain.value = document.getElementById('vol-slider').value / 100; masterGain.connect(audioCtx.destination); startBackgroundMusic(); }
+    if(audioCtx.state === 'suspended') audioCtx.resume().catch(e => console.log("Audio resume blocked by browser"));
+    } catch(e) { console.log("Audio not supported"); }
+}
+function toggleVolumeSlider() { let sliderCont = document.getElementById('vol-slider-container'); sliderCont.style.display = (sliderCont.style.display === 'block') ? 'none' : 'block'; initAudio(); }
+document.addEventListener('click', function(e) { initAudio(); let btn = e.target.closest('button'); if(btn && !btn.classList.contains('active-chip') && !btn.id.startsWith('chip-') && !btn.parentElement.classList.contains('chips') && !btn.parentElement.classList.contains('bet')) { playClick(); } });
+function setVolume(val) { if(masterGain) masterGain.gain.value = val / 100; let icon = document.getElementById('vol-btn'); if(val == 0) icon.innerText = '🔇'; else if(val < 50) icon.innerText = '🔉'; else icon.innerText = '🔊'; }
+function playTone(freq, type, time, duration, vol=0.3) { if(!audioCtx || audioCtx.state !== 'running') return; let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, time); gain.gain.setValueAtTime(vol, time); gain.gain.exponentialRampToValueAtTime(0.01, time + duration); osc.connect(gain); gain.connect(masterGain); osc.start(time); osc.stop(time + duration); }
+function playClick() { if(!audioCtx) return; let t = audioCtx.currentTime; playTone(1000, 'sine', t, 0.05, 0.2); playTone(1500, 'sine', t + 0.08, 0.08, 0.2); }
+function playCoinSound() { if(!audioCtx) return; let t = audioCtx.currentTime; playTone(2500, 'triangle', t, 0.1, 0.4); playTone(3500, 'sine', t, 0.15, 0.3); playTone(4500, 'sine', t + 0.05, 0.2, 0.2); }
+function playTickSound() { if(!audioCtx || masterGain.gain.value === 0) return; let t = audioCtx.currentTime; playTone(1200, 'sine', t, 0.05, 0.15); }
+function playWinSound() { if(!audioCtx) return; let t = audioCtx.currentTime; playTone(400, 'square', t, 0.5, 0.2); playTone(600, 'square', t+0.1, 0.5, 0.2); playTone(800, 'square', t+0.2, 0.5, 0.2); }
+function playLoseSound() { if(!audioCtx) return; let t = audioCtx.currentTime; playTone(200, 'sawtooth', t, 0.4, 0.2); playTone(150, 'sawtooth', t+0.1, 0.4, 0.2); }
+function startBackgroundMusic() { if(isMusicPlaying) return; isMusicPlaying = true; setInterval(() => { if(audioCtx && audioCtx.state === 'running' && masterGain && masterGain.gain.value > 0) { let t = audioCtx.currentTime; let notes = [261.63, 329.63, 392.00, 440.00]; let note = notes[Math.floor(Math.random() * notes.length)]; playTone(note, 'sine', t, 0.6, 0.05); playTone(note/2, 'triangle', t, 1.2, 0.03); } }, 800); }
+
+// Auth Logic
+let currentUser = null;
+document.addEventListener("DOMContentLoaded", () => {
+    let sessionUser = localStorage.getItem('dt_user_logged');
+    let users = getDB('users') || {}; 
+    if(sessionUser && users[sessionUser]) { 
+        if(users[sessionUser].isBlocked) { alert("Your account has been blocked by Admin!"); localStorage.removeItem('dt_user_logged'); document.getElementById('auth-container').style.display = 'flex'; return; }
+        users[sessionUser].isLoggedIn = true; setDB('users', users);
+        startGame(sessionUser, users[sessionUser].name); 
+    } else { localStorage.removeItem('dt_user_logged'); document.getElementById('auth-container').style.display = 'flex'; }
+});
+
+function switchTab(tab) {
+    document.getElementById('tab-login').classList.remove('active'); document.getElementById('tab-register').classList.remove('active');
+    if(tab === 'login') { document.getElementById('tab-login').classList.add('active'); document.getElementById('form-login').style.display = 'block'; document.getElementById('form-register').style.display = 'none'; } 
+    else { document.getElementById('tab-register').classList.add('active'); document.getElementById('form-register').style.display = 'block'; document.getElementById('form-login').style.display = 'none'; }
+}
+
+function registerUser() {
+    let name = document.getElementById('r-name').value.trim(); let mobile = document.getElementById('r-mobile').value.trim(); let pin = document.getElementById('r-pin').value.trim();
+    if(name === "" || mobile === "" || pin === "") return alert("Please fill all fields!");
+    if(!/^[0-9]{10}$/.test(mobile)) return alert("Please enter a valid 10-digit Mobile Number!");
+    if(pin.length < 4) return alert("PIN must be 4 digits!");
+    let users = getDB('users') || {}; 
+    if(users[mobile]) { alert("This Mobile Number is already registered! Switching to Login page..."); switchTab('login'); document.getElementById('l-mobile').value = mobile; document.getElementById('l-pin').focus(); return; }
+    users[mobile] = { name: name, id: mobile, pin: pin, balance: 1000, totalWin: 0, isLoggedIn: true, isBlocked: false }; 
+    setDB('users', users); alert("Account Created Successfully! Free ₹1000 added."); localStorage.setItem('dt_user_logged', mobile); startGame(mobile, name);
+}
+
+function loginUser() { 
+    let mobile = document.getElementById('l-mobile').value.trim(); let pin = document.getElementById('l-pin').value.trim();
+    if(mobile === "" || pin === "") return alert("Please enter Mobile No. and PIN!");
+    let users = getDB('users') || {}; 
+    if(!users[mobile]) return alert("Account not found! Please Register first.");
+    if(users[mobile].pin && users[mobile].pin !== pin) return alert("Incorrect PIN Password!");
+    if(users[mobile].isBlocked) return alert("Your account has been blocked by Admin!");
+    users[mobile].isLoggedIn = true; setDB('users', users); localStorage.setItem('dt_user_logged', mobile); startGame(mobile, users[mobile].name); 
+}
+
+function userLogout(isForced = false) { if(currentUser) { let users = getDB('users'); if(users && users[currentUser] && isForced !== true) { users[currentUser].isLoggedIn = false; setDB('users', users); } } localStorage.removeItem('dt_user_logged'); window.location.reload(); }
+
+// Game Setup
+let userBalance = 0; let appSettings = {}; let adminStats = {}; let betSide="", currentBet=0, chip=10, time=15, isPlaying=false;
+
+function startGame(mobileId, name) {
+    currentUser = mobileId; document.getElementById('auth-container').style.display = 'none'; document.getElementById('game-container').style.display = 'block'; 
+    document.getElementById('userNameDisplay').innerText = name; document.getElementById('userIdDisplay').innerText = "(" + mobileId + ")";
+    appSettings = getDB('settings') || {upi: 'admin@ybl'}; document.getElementById('displayUpi').innerText = appSettings.upi;
+    updateBalanceDisplay(); updateHistoryUI(); 
+    if(window.balInterval) clearInterval(window.balInterval); window.balInterval = setInterval(updateBalanceDisplay, 2000); 
+}
+
+function updateBalanceDisplay() { 
+    let users = getDB('users'); 
+    if(users && users[currentUser]) { 
+        if(users[currentUser].isBlocked) { alert("Your account has been blocked by Admin!"); userLogout(true); return; }
+        if(!users[currentUser].isLoggedIn) { alert("Session ended! You have been logged out."); userLogout(true); return; }
+        userBalance = users[currentUser].balance; document.getElementById('balance').innerText = userBalance; 
+    } 
+}
+
+function submitDeposit() { let amt = parseInt(document.getElementById('depAmount').value); let utr = document.getElementById('depUTR').value; appSettings = getDB('settings') || {minDep:100}; if(isNaN(amt) || amt < appSettings.minDep) return alert("Min Deposit is ₹" + appSettings.minDep); let txs = getDB('transactions') || []; txs.push({ id: Date.now(), userId: currentUser, type: 'Deposit', amount: amt, detail: utr, status: 'Pending', date: new Date().toLocaleString() }); setDB('transactions', txs); alert("Deposit Request Sent to Admin!"); document.getElementById('depositModal').style.display='none'; }
+function submitWithdraw() { let amt = parseInt(document.getElementById('withAmount').value); let upi = document.getElementById('withUPI').value; appSettings = getDB('settings') || {minWith:500}; if(isNaN(amt) || amt < appSettings.minWith) return alert("Min Withdraw is ₹" + appSettings.minWith); if(amt > userBalance) return alert("Insufficient Balance!"); let users = getDB('users'); users[currentUser].balance -= amt; setDB('users', users); updateBalanceDisplay(); let txs = getDB('transactions') || []; txs.push({ id: Date.now(), userId: currentUser, type: 'Withdraw', amount: amt, detail: upi, status: 'Pending', date: new Date().toLocaleString() }); setDB('transactions', txs); alert("Withdraw Request Sent to Admin!"); document.getElementById('withdrawModal').style.display='none'; }
+
+// Game Logic
+function selectChip(a) { playCoinSound(); chip=a; document.querySelectorAll('.chips button').forEach(b=>b.classList.remove('active-chip')); document.getElementById(`chip-${a}`).classList.add('active-chip'); }
+function placeBet(side) {
+    if(isPlaying || time<=2) return; let users = getDB('users'); if(!users || !users[currentUser]) return;
+    let effectiveBalance = users[currentUser].balance; if (betSide !== "" && betSide !== side) effectiveBalance += currentBet; 
+    if(effectiveBalance < chip) return alert("Low Balance! Please deposit.");
+    if(betSide === side) { currentBet += chip; users[currentUser].balance -= chip; } 
+    else { if(betSide !== "") users[currentUser].balance += currentBet; betSide = side; currentBet = chip; users[currentUser].balance -= chip; }
+    setDB('users', users); updateBalanceDisplay();
+    document.getElementById('amt-dragon').innerText = ""; document.getElementById('amt-tie').innerText = ""; document.getElementById('amt-tiger').innerText = "";
+    document.querySelectorAll('.bet button').forEach(b=>b.classList.remove('active-bet')); document.getElementById(`btn-${side}`).classList.add('active-bet');
+    document.getElementById('amt-' + side).innerText = "Total: ₹" + currentBet; playCoinSound();
+}
+
+setInterval(() => { if(!isPlaying && document.getElementById('game-container').style.display === 'block') { time--; document.getElementById('timer').innerText = time; if(time <= 5 && time > 0) playTickSound(); if(time===0) play(); } }, 1000);
+
+const cards=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+function reveal(el, val) { el.style.transform="scale(0)"; setTimeout(()=>{ el.classList.remove("card-back"); el.innerHTML=`<div style="color:black">${cards[val]}</div>`; el.style.transform="scale(1)"; },200); }
+
+function play() {
+    isPlaying = true; document.getElementById('timer').innerText="STOP";
+    appSettings = getDB('settings') || { gameControl: 'fair', targetProfit: 20 }; adminStats = getDB('adminStats') || { totalBets: 0, totalPayouts: 0 };
+    let d, t; let mode = appSettings.gameControl; let profitPercentage = adminStats.totalBets > 0 ? ((adminStats.totalBets - adminStats.totalPayouts) / adminStats.totalBets) * 100 : 0;
+    
+    if(mode === 'auto') { if(profitPercentage < appSettings.targetProfit && betSide !== "") { if(betSide === 'dragon') { t = Math.floor(Math.random()*7)+6; d = Math.floor(Math.random()*6); } else if(betSide === 'tiger') { d = Math.floor(Math.random()*7)+6; t = Math.floor(Math.random()*6); } else { d = Math.floor(Math.random()*13); t = (d === 12) ? 0 : d + 1; } } else { d = Math.floor(Math.random()*13); t = Math.floor(Math.random()*13); } } else if (mode === 'dragon') { d = 10; t = 2; } else if (mode === 'tiger') { t = 10; d = 2; } else if (mode === 'tie') { d = 7; t = 7; } else { d = Math.floor(Math.random()*13); t = Math.floor(Math.random()*13); } 
+
+    reveal(document.getElementById('dragonCard'), d); setTimeout(()=>reveal(document.getElementById('tigerCard'), t), 500);
+
+    setTimeout(() => {
+        let win = d > t ? "dragon" : t > d ? "tiger" : "tie"; let history = getDB('gameHistory') || []; 
+        history.push(win); if(history.length > 50) history.shift(); setDB('gameHistory', history); updateHistoryUI(); 
+        
+        if(betSide !== "") {
+            let payout = (betSide === win) ? currentBet * (win === "tie" ? 9 : 2) : 0; let users = getDB('users');
+            if(users && users[currentUser]) {
+                if(payout > 0) { users[currentUser].balance += payout; document.getElementById('lastWin').innerHTML = `🏆 WON <span style="color:gold;">₹${payout-currentBet}</span>`; document.getElementById('lastWin').style.color = "#00e676"; playWinSound(); } 
+                else { document.getElementById('lastWin').innerHTML = `❌ LOST <span style="color:gold;">₹${currentBet}</span>`; document.getElementById('lastWin').style.color = "#ff3b3b"; playLoseSound(); }
+                setDB('users', users); updateBalanceDisplay(); 
+                adminStats.totalBets += currentBet; adminStats.totalPayouts += payout; setDB('adminStats', adminStats);
+            }
+        }
+        setTimeout(()=>{ time=15; betSide=""; currentBet=0; isPlaying=false; document.querySelectorAll('.card').forEach(c => { c.innerHTML=""; c.classList.add('card-back'); }); document.querySelectorAll('.bet button').forEach(b=>b.classList.remove('active-bet')); document.getElementById('amt-dragon').innerText = ""; document.getElementById('amt-tie').innerText = ""; document.getElementById('amt-tiger').innerText = ""; document.getElementById('lastWin').innerText="Waiting to bet..."; document.getElementById('lastWin').style.color="#ddd"; }, 3500);
+    }, 1500);
+}
+function updateHistoryUI() { let history = getDB('gameHistory') || []; let container = document.getElementById('history-container'); container.innerHTML = ""; history.forEach(res => { let ball = document.createElement('div'); if(res === 'dragon') { ball.className = "history-ball hist-d"; ball.innerText = "D"; } else if(res === 'tiger') { ball.className = "history-ball hist-t"; ball.innerText = "T"; } else { ball.className = "history-ball hist-tie"; ball.innerText = "Tie"; } container.appendChild(ball); }); container.scrollLeft = container.scrollWidth; }
+</script>
+</body>
+</html>
